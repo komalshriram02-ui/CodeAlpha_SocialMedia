@@ -3,6 +3,33 @@
 {% block title %}Home - Connect{% endblock %}
 
 {% block content %}
+<style>
+    .actions {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin-top: 8px;
+    }
+
+    .like-form {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .heart {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 26px;
+        line-height: 1;
+        color: #777;
+    }
+
+    .heart.liked {
+        color: #e0245e;
+    }
+</style>
 <div class="card">
     <h3>What's on your mind?</h3>
     <form method="post" enctype="multipart/form-data">
@@ -21,7 +48,18 @@
     {% if post.image %}
     <img src="{{ post.image.url }}" alt="Post image" style="max-width:100%; border-radius:6px;">
     {% endif %}
-    <p class="muted">{{ post.likes.count }} likes · {{ post.comments.count }} comments</p>
+    <div class="actions">
+        <form method="post" action="{% url 'toggle_like' post.pk %}" class="like-form">
+            {% csrf_token %}
+            {% if post.liked_by_me %}
+            <button type="submit" class="heart liked">♥</button>
+            {% else %}
+            <button type="submit" class="heart">♡</button>
+            {% endif %}
+            <span class="muted">{{ post.likes.count }}</span>
+        </form>
+        <span class="muted">💬 {{ post.comments.count }}</span>
+    </div>
 </div>
 {% empty %}
 <div class="card">

@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import Post, Like
-
+from .models import Post, Like, Comment
 
 @login_required
 def home(request):
@@ -29,3 +28,15 @@ def toggle_like(request, post_id):
         if not created:
             like.delete()
     return redirect(request.META.get("HTTP_REFERER", "home"))
+
+
+    
+
+@login_required
+def add_comment(request, post_id):
+    if request.method == "POST":
+        post = get_object_or_404(Post, pk=post_id)
+        text = request.POST.get("text", "").strip()
+        if text:
+            Comment.objects.create(post=post, author=request.user, text=text[:300])
+    return redirect("home")

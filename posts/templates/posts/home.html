@@ -29,6 +29,17 @@
     .heart.liked {
         color: #e0245e;
     }
+
+    .comment {
+        margin: 8px 0 0;
+        font-size: 14px;
+    }
+
+    .comment-form {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+    }
 </style>
 <div class="card">
     <h3>What's on your mind?</h3>
@@ -60,6 +71,14 @@
         </form>
         <span class="muted">💬 {{ post.comments.count }}</span>
     </div>
+    {% for comment in post.comments.all %}
+    <p class="comment"><strong>{{ comment.author.username }}</strong> {{ comment.text }}</p>
+    {% endfor %}
+    <form method="post" action="{% url 'add_comment' post.pk %}" class="comment-form">
+        {% csrf_token %}
+        <input type="text" name="text" maxlength="300" placeholder="Write a comment..." required>
+        <button type="submit" class="btn">Send</button>
+    </form>
 </div>
 {% empty %}
 <div class="card">

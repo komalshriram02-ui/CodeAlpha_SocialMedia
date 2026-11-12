@@ -82,3 +82,14 @@ def edit_profile(request):
         profile.save()
         return redirect("profile", username=request.user.username)
     return render(request, "accounts/edit_profile.html", {"profile": profile})
+
+
+
+
+@login_required
+def search_users(request):
+    query = request.GET.get("q", "").strip()
+    users = []
+    if query:
+        users = User.objects.filter(username__icontains=query).select_related("profile")[:20]
+    return render(request, "accounts/search.html", {"users": users, "query": query})

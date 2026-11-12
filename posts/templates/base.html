@@ -116,6 +116,7 @@
         <div>
             {% if user.is_authenticated %}
             <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'search_users' %}">Search</a>
             <a href="{% url 'profile' user.username %}">Hello, {{ user.username }}</a>
             <form method="post" action="{% url 'logout' %}">
                 {% csrf_token %}

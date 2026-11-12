@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from accounts.models import Follow
 from .models import Post, Like, Comment
+
 
 @login_required
 def home(request):
@@ -12,12 +14,28 @@ def home(request):
         return redirect("home")
 
     posts = Post.objects.select_related("author").prefetch_related("likes", "comments")
+
+    following_feed = request.GET.get("feed") == "following"
+    if following_feed:
+        following_ids = list(
+            Follow.objects.filter(follower=request.user).values_list(
+                "following_id", flat=True
+            )
+        )
+        following_ids.append(request.user.pk)
+        posts = posts.filter(author_id__in=following_ids)
+
     liked_ids = set(
         Like.objects.filter(user=request.user).values_list("post_id", flat=True)
     )
     for post in posts:
         post.liked_by_me = post.pk in liked_ids
-    return render(request, "posts/home.html", {"posts": posts})
+
+    return render(
+        request,
+        "posts/home.html",
+        {"posts": posts, "following_feed": following_feed},
+    )
 
 
 @login_required
@@ -29,8 +47,6 @@ def toggle_like(request, post_id):
             like.delete()
     return redirect(request.META.get("HTTP_REFERER", "home"))
 
-
-    
 
 @login_required
 def add_comment(request, post_id):

@@ -33,6 +33,27 @@
         stroke-linejoin: round;
     }
 
+    .tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .tab {
+        padding: 8px 18px;
+        border-radius: 20px;
+        background: #e4e6eb;
+        color: #222;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .tab.active {
+        background: #1a73e8;
+        color: white;
+    }
+
+
     .icon-btn.liked {
         color: #e0245e;
     }
@@ -89,6 +110,11 @@
     </form>
 </div>
 
+<div class="tabs">
+    <a href="{% url 'home' %}" class="tab {% if not following_feed %}active{% endif %}">For You</a>
+    <a href="{% url 'home' %}?feed=following" class="tab {% if following_feed %}active{% endif %}">Following</a>
+</div>
+
 {% for post in posts %}
 <div class="card">
     <strong><a href="{% url 'profile' post.author.username %}">{{ post.author.username }}</a></strong>
@@ -134,7 +160,7 @@
 </div>
 {% empty %}
 <div class="card">
-    <p>No posts yet. Be the first to post!</p>
+    <p>No posts here yet.{% if following_feed %} Follow some people to see their posts!{% endif %}</p>
 </div>
 {% endfor %}
 {% endblock %}

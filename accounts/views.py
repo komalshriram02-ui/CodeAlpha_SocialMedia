@@ -68,3 +68,17 @@ def toggle_follow(request, username):
         if not created:
             follow.delete()
     return redirect("profile", username=username)
+
+    
+
+@login_required
+def edit_profile(request):
+    profile, created = Profile.objects.get_or_create(user=request.user)
+    if request.method == "POST":
+        profile.bio = request.POST.get("bio", "").strip()[:300]
+        avatar = request.FILES.get("avatar")
+        if avatar:
+            profile.avatar = avatar
+        profile.save()
+        return redirect("profile", username=request.user.username)
+    return render(request, "accounts/edit_profile.html", {"profile": profile})

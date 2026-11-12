@@ -3,11 +3,38 @@
 {% block title %}{{ profile_user.username }} - Connect{% endblock %}
 
 {% block content %}
+<style>
+    .avatar-big {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        object-fit: cover;
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .avatar-empty {
+        background: #1a73e8;
+        color: white;
+        font-size: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
 <div class="card">
+    {% if profile.avatar %}
+    <img src="{{ profile.avatar.url }}" alt="Profile photo" class="avatar-big">
+    {% else %}
+    <div class="avatar-big avatar-empty">{{ profile_user.username|first|upper }}</div>
+    {% endif %}
     <h2>{{ profile_user.username }}</h2>
     <p>{{ profile.bio }}</p>
     <p class="muted">{{ posts.count }} posts · {{ profile.followers_count }} followers · {{ profile.following_count }}
         following</p>
+    {% if is_own %}
+    <a href="{% url 'edit_profile' %}" class="btn btn-gray">Edit Profile</a>
+    {% endif %}
     {% if not is_own %}
     <form method="post" action="{% url 'toggle_follow' profile_user.username %}">
         {% csrf_token %}

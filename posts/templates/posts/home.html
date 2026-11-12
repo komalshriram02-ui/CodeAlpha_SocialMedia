@@ -151,6 +151,19 @@
             <strong><a href="{% url 'profile' post.author.username %}">{{ post.author.username }}</a></strong>
             <div class="muted">{{ post.created_at|date:"d M Y, H:i" }}</div>
         </div>
+        {% if post.author_id == user.id %}
+        <form method="post" action="{% url 'delete_post' post.pk %}" style="margin-left:auto;"
+            onsubmit="return confirm('Delete this post?');">
+            {% csrf_token %}
+            <button type="submit" class="icon-btn" title="Delete post"><svg viewBox="0 0 24 24">
+                    <polyline points="3 6 5 6 21 6" />
+                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                    <path d="M10 11v6M14 11v6" />
+                    <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+                </svg></button>
+        </form>
+        {% endif %}
+
     </div>
     <p>{{ post.content }}</p>
     {% if post.image %}

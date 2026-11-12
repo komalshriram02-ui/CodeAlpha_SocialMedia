@@ -56,3 +56,13 @@ def add_comment(request, post_id):
         if text:
             Comment.objects.create(post=post, author=request.user, text=text[:300])
     return redirect("home")
+
+
+
+
+@login_required
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, pk=post_id, author=request.user)
+    if request.method == "POST":
+        post.delete()
+    return redirect(request.META.get("HTTP_REFERER", "home"))

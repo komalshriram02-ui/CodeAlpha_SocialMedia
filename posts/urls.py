@@ -5,4 +5,5 @@ urlpatterns = [
     path("", views.home, name="home"),
     path("like/<int:post_id>/", views.toggle_like, name="toggle_like"),
     path("comment/<int:post_id>/", views.add_comment, name="add_comment"),
+    path("delete/<int:post_id>/", views.delete_post, name="delete_post"),
 ]

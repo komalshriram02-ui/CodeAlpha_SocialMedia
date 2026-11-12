@@ -124,20 +124,6 @@
         margin-top: 10px;
     }
 </style>
-<div class="card">
-    <h3>What's on your mind?</h3>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <textarea name="content" rows="3" maxlength="500" placeholder="Write something..." required></textarea>
-        <p><input type="file" name="image" accept="image/*"></p>
-        <button type="submit" class="btn">Post</button>
-    </form>
-</div>
-
-<div class="tabs">
-    <a href="{% url 'home' %}" class="tab {% if not following_feed %}active{% endif %}">For You</a>
-    <a href="{% url 'home' %}?feed=following" class="tab {% if following_feed %}active{% endif %}">Following</a>
-</div>
 
 {% for post in posts %}
 <div class="card">

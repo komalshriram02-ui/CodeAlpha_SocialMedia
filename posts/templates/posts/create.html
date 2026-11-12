@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Create post - Linkup{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Create post</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <textarea name="content" rows="4" maxlength="500" placeholder="What's on your mind?" required></textarea>
+        <p class="muted">Add a photo (optional)</p>
+        <p><input type="file" name="image" accept="image/*"></p>
+        <button type="submit" class="btn">Post</button>
+        <a href="{% url 'home' %}" class="btn btn-gray">Cancel</a>
+    </form>
+</div>
+{% endblock %}

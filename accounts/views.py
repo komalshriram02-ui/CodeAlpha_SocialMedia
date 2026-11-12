@@ -1,7 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import Profile
+from django.contrib.auth.models import User
+from .models import Profile, Follow
+from posts.models import Post
 
 
 def register_view(request):
@@ -32,3 +35,36 @@ def logout_view(request):
     if request.method == "POST":
         logout(request)
     return redirect("login")
+
+
+@login_required
+def profile_view(request, username):
+    profile_user = get_object_or_404(User, username=username)
+    profile, created = Profile.objects.get_or_create(user=profile_user)
+    posts = Post.objects.filter(author=profile_user)
+    is_following = Follow.objects.filter(
+        follower=request.user, following=profile_user
+    ).exists()
+    return render(
+        request,
+        "accounts/profile.html",
+        {
+            "profile_user": profile_user,
+            "profile": profile,
+            "posts": posts,
+            "is_following": is_following,
+            "is_own": profile_user == request.user,
+        },
+    )
+
+
+@login_required
+def toggle_follow(request, username):
+    target = get_object_or_404(User, username=username)
+    if request.method == "POST" and target != request.user:
+        follow, created = Follow.objects.get_or_create(
+            follower=request.user, following=target
+        )
+        if not created:
+            follow.delete()
+    return redirect("profile", username=username)

@@ -149,3 +149,9 @@ MAILERS = {
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 LOGIN_URL = "login"
+
+
+
+
+CSRF_TRUSTED_ORIGINS = ["https://*.onrender.com"]
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

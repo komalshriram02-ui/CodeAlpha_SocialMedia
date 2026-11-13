@@ -244,13 +244,76 @@
             border-radius: 50%;
             object-fit: cover;
         }
+
+        html[data-theme="dark"] body {
+            background: #0f1115;
+            color: #e5e7eb;
+        }
+
+        html[data-theme="dark"] .topbar,
+        html[data-theme="dark"] .bottom-nav {
+            background: #181b22;
+            border-color: #2a2f3a;
+        }
+
+        html[data-theme="dark"] .card {
+            background: #181b22;
+            border-color: #2a2f3a;
+        }
+
+        html[data-theme="dark"] .muted,
+        html[data-theme="dark"] .helptext {
+            color: #9ca3af;
+        }
+
+        html[data-theme="dark"] input[type=text],
+        html[data-theme="dark"] input[type=password],
+        html[data-theme="dark"] textarea {
+            background: #0f1115;
+            border-color: #374151;
+            color: #e5e7eb;
+        }
+
+        html[data-theme="dark"] a {
+            color: #60a5fa;
+        }
+
+        html[data-theme="dark"] .nav-icon,
+        html[data-theme="dark"] .icon-btn {
+            color: #cbd5e1;
+        }
+
+        html[data-theme="dark"] .icon-btn.liked {
+            color: #e0245e;
+        }
+
+        html[data-theme="dark"] .brand {
+            color: transparent;
+        }
     </style>
 </head>
 
 <body>
     <div class="topbar">
         <a class="brand" href="{% url 'home' %}">Linkup</a>
-        <div class="top-links">
+        <div class="top-links" style="display:flex; align-items:center; gap:16px;">
+            <button type="button" class="nav-icon" title="Dark mode" onclick="toggleTheme()"><svg viewBox="0 0 24 24">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg></button>
+            <script>
+                (function () {
+                    try {
+                        var t = localStorage.getItem("theme");
+                        if (t) { document.documentElement.setAttribute("data-theme", t); }
+                    } catch (e) { }
+                })();
+                function toggleTheme() {
+                    var d = document.documentElement;
+                    var t = d.getAttribute("data-theme") === "dark" ? "light" : "dark";
+                    d.setAttribute("data-theme", t);
+                    try { localStorage.setItem("theme", t); } catch (e) { }
+                }
+            </script>
             {% if user.is_authenticated %}
             <form method="post" action="{% url 'logout' %}" style="display:inline;">
                 {% csrf_token %}
